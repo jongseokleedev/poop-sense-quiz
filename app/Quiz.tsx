@@ -130,7 +130,7 @@ export default function Page() {
   const resultUrl = () => {
     if (typeof window === "undefined") return "";
     const u = new URL(window.location.href);
-    u.search = `?r=${tier.key}`;
+    u.search = `?r=${tier.key}&v=2`;
     return u.toString();
   };
 
