@@ -28,7 +28,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
       description,
       url: tier ? `${SITE}/?r=${tier.key}` : SITE,
       siteName: "대한급똥감수성연구소",
-      images: [{ url: ogUrl, width: 1200, height: 630 }],
+      images: [{ url: ogUrl, width: 1200, height: 1200 }],
       type: "website",
     },
     twitter: {

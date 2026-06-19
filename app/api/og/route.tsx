@@ -17,6 +17,8 @@ async function loadFont(): Promise<ArrayBuffer> {
   return fontCache;
 }
 
+const SIZE = 1200;
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -27,7 +29,7 @@ export async function GET(req: Request) {
     const fonts = [
       { name: "Pretendard", data: fontData, style: "normal" as const, weight: 700 as const },
     ];
-    const opts = { width: 1200, height: 630, fonts, emoji: "twemoji" as const };
+    const opts = { width: SIZE, height: SIZE, fonts, emoji: "twemoji" as const };
 
     if (!tier) {
       return new ImageResponse(
@@ -42,13 +44,22 @@ export async function GET(req: Request) {
               justifyContent: "center",
               background: "#E7D2AE",
               fontFamily: "Pretendard",
+              gap: 32,
             }}
           >
-            <div style={{ fontSize: 200, marginBottom: 20 }}>💩</div>
-            <div style={{ fontSize: 72, color: "#2A2018", letterSpacing: "-0.03em" }}>
+            <div style={{ fontSize: 460, lineHeight: 1, display: "flex" }}>💩</div>
+            <div
+              style={{
+                fontSize: 96,
+                color: "#2A2018",
+                letterSpacing: "-0.03em",
+                display: "flex",
+                textAlign: "center",
+              }}
+            >
               급똥 감(感)능력 테스트
             </div>
-            <div style={{ fontSize: 28, color: "#6E4B2A", marginTop: 20 }}>
+            <div style={{ fontSize: 36, color: "#6E4B2A", display: "flex" }}>
               🔬 대한급똥감수성연구소
             </div>
           </div>
@@ -66,107 +77,93 @@ export async function GET(req: Request) {
             width: "100%",
             height: "100%",
             display: "flex",
-            background: "#E7D2AE",
-            padding: 36,
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            background: tier.soft,
             fontFamily: "Pretendard",
+            padding: 80,
+            position: "relative",
           }}
         >
           <div
             style={{
-              flex: 1,
+              position: "absolute",
+              top: 60,
+              left: 0,
+              right: 0,
               display: "flex",
-              flexDirection: "column",
-              background: "#FBF4E6",
-              borderRadius: 28,
-              padding: "36px 44px",
-              border: "3px solid #E7DCC6",
+              justifyContent: "center",
+              fontSize: 36,
+              color: "#6E4B2A",
             }}
           >
+            🔬 대한급똥감수성연구소
+          </div>
+
+          <div
+            style={{
+              fontSize: 560,
+              lineHeight: 1,
+              display: "flex",
+              marginBottom: 20,
+            }}
+          >
+            {tier.emoji}
+          </div>
+
+          <div
+            style={{
+              fontSize: 120,
+              color: tier.accent,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              display: "flex",
+              marginTop: 20,
+            }}
+          >
+            {tier.name}
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: 18,
+              marginTop: 36,
+            }}
+          >
+            <div style={{ fontSize: 44, color: "#6A5A47", display: "flex" }}>똥감지수</div>
             <div
               style={{
+                fontSize: 110,
+                color: tier.accent,
                 display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                fontSize: 22,
-                color: "#6E4B2A",
-                borderBottom: "2px dashed #E0D4BC",
-                paddingBottom: 16,
+                alignItems: "baseline",
+                lineHeight: 1,
               }}
             >
-              <div style={{ display: "flex" }}>🔬 대한급똥감수성연구소</div>
-              <div style={{ display: "flex", color: "#A9997F" }}>REPORT</div>
+              {idx}
+              <span style={{ fontSize: 56 }}>%</span>
             </div>
+          </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 28, marginTop: 28 }}>
-              <div style={{ fontSize: 130, lineHeight: 1, display: "flex" }}>{tier.emoji}</div>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ fontSize: 22, color: "#A9997F", display: "flex" }}>최종 판정</div>
-                <div
-                  style={{
-                    fontSize: 64,
-                    color: tier.accent,
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1.1,
-                    marginTop: 4,
-                    display: "flex",
-                  }}
-                >
-                  {tier.name}
-                </div>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                background: tier.soft,
-                borderRadius: 20,
-                padding: "20px 28px",
-                marginTop: 24,
-              }}
-            >
-              <div style={{ fontSize: 26, color: "#6A5A47", display: "flex" }}>똥감지수</div>
-              <div
-                style={{
-                  fontSize: 56,
-                  color: tier.accent,
-                  display: "flex",
-                  alignItems: "baseline",
-                  lineHeight: 1,
-                }}
-              >
-                {idx}
-                <span style={{ fontSize: 28 }}>%</span>
-              </div>
-            </div>
-
-            <div
-              style={{
-                marginTop: 24,
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ fontSize: 24, color: "#6A5A47", display: "flex" }}>
-                나의 똥감 유형은? 👉
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  border: `3px solid ${tier.accent}`,
-                  color: tier.accent,
-                  fontSize: 22,
-                  padding: "8px 18px",
-                  borderRadius: 10,
-                  transform: "rotate(-6deg)",
-                }}
-              >
-                {tier.top}
-              </div>
-            </div>
+          <div
+            style={{
+              position: "absolute",
+              bottom: 70,
+              right: 80,
+              display: "flex",
+              border: `5px solid ${tier.accent}`,
+              color: tier.accent,
+              fontSize: 36,
+              padding: "12px 28px",
+              borderRadius: 14,
+              transform: "rotate(-7deg)",
+              background: "#FBF4E6",
+            }}
+          >
+            {tier.top}
           </div>
         </div>
       ),

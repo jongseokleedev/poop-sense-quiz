@@ -149,7 +149,7 @@ export default function Page() {
         description: `친구의 똥감지수: ${idx}%`,
         imageUrl: ogImage,
         imageWidth: 1200,
-        imageHeight: 630,
+        imageHeight: 1200,
         link: { mobileWebUrl: url, webUrl: url },
       },
       buttons: [
