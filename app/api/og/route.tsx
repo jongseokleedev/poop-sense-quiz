@@ -67,7 +67,7 @@ export async function GET(req: Request) {
             height: "100%",
             display: "flex",
             background: "#E7D2AE",
-            padding: 60,
+            padding: 36,
             fontFamily: "Pretendard",
           }}
         >
@@ -77,8 +77,8 @@ export async function GET(req: Request) {
               display: "flex",
               flexDirection: "column",
               background: "#FBF4E6",
-              borderRadius: 32,
-              padding: 56,
+              borderRadius: 28,
+              padding: "36px 44px",
               border: "3px solid #E7DCC6",
             }}
           >
@@ -90,24 +90,25 @@ export async function GET(req: Request) {
                 fontSize: 22,
                 color: "#6E4B2A",
                 borderBottom: "2px dashed #E0D4BC",
-                paddingBottom: 20,
+                paddingBottom: 16,
               }}
             >
-              <div>🔬 대한급똥감수성연구소</div>
-              <div style={{ color: "#A9997F" }}>REPORT</div>
+              <div style={{ display: "flex" }}>🔬 대한급똥감수성연구소</div>
+              <div style={{ display: "flex", color: "#A9997F" }}>REPORT</div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 32, marginTop: 40 }}>
-              <div style={{ fontSize: 160, lineHeight: 1 }}>{tier.emoji}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 28, marginTop: 28 }}>
+              <div style={{ fontSize: 130, lineHeight: 1, display: "flex" }}>{tier.emoji}</div>
               <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ fontSize: 24, color: "#A9997F" }}>최종 판정</div>
+                <div style={{ fontSize: 22, color: "#A9997F", display: "flex" }}>최종 판정</div>
                 <div
                   style={{
-                    fontSize: 72,
+                    fontSize: 64,
                     color: tier.accent,
                     letterSpacing: "-0.02em",
                     lineHeight: 1.1,
-                    marginTop: 6,
+                    marginTop: 4,
+                    display: "flex",
                   }}
                 >
                   {tier.name}
@@ -118,25 +119,26 @@ export async function GET(req: Request) {
             <div
               style={{
                 display: "flex",
-                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center",
                 background: tier.soft,
                 borderRadius: 20,
-                padding: 28,
-                marginTop: 36,
+                padding: "20px 28px",
+                marginTop: 24,
               }}
             >
+              <div style={{ fontSize: 26, color: "#6A5A47", display: "flex" }}>똥감지수</div>
               <div
                 style={{
+                  fontSize: 56,
+                  color: tier.accent,
                   display: "flex",
-                  justifyContent: "space-between",
                   alignItems: "baseline",
+                  lineHeight: 1,
                 }}
               >
-                <div style={{ fontSize: 26, color: "#6A5A47" }}>똥감지수</div>
-                <div style={{ fontSize: 64, color: tier.accent, display: "flex", alignItems: "baseline" }}>
-                  {idx}
-                  <span style={{ fontSize: 32 }}>%</span>
-                </div>
+                {idx}
+                <span style={{ fontSize: 28 }}>%</span>
               </div>
             </div>
 
@@ -146,18 +148,20 @@ export async function GET(req: Request) {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                paddingTop: 28,
               }}
             >
-              <div style={{ fontSize: 26, color: "#6A5A47" }}>나의 똥감 유형은? 👉</div>
+              <div style={{ fontSize: 24, color: "#6A5A47", display: "flex" }}>
+                나의 똥감 유형은? 👉
+              </div>
               <div
                 style={{
-                  border: `4px solid ${tier.accent}`,
+                  display: "flex",
+                  border: `3px solid ${tier.accent}`,
                   color: tier.accent,
-                  fontSize: 26,
-                  padding: "10px 22px",
-                  borderRadius: 12,
-                  transform: "rotate(-7deg)",
+                  fontSize: 22,
+                  padding: "8px 18px",
+                  borderRadius: 10,
+                  transform: "rotate(-6deg)",
                 }}
               >
                 {tier.top}
