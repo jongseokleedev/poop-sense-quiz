@@ -127,16 +127,22 @@ export default function Page() {
   const idx = Math.round((score / 8) * 100);
   const tier = pickTier(score);
 
-  const resultUrl = () => {
+  const resultUrl = (channel: "kakao" | "copy") => {
     if (typeof window === "undefined") return "";
     const u = new URL(window.location.href);
-    u.search = `?r=${tier.key}&v=2`;
+    u.search = "";
+    u.searchParams.set("r", tier.key);
+    u.searchParams.set("v", "2");
+    u.searchParams.set("utm_source", channel);
+    u.searchParams.set("utm_medium", channel === "kakao" ? "social" : "referral");
+    u.searchParams.set("utm_campaign", "result_share");
+    u.searchParams.set("utm_content", tier.key);
     return u.toString();
   };
 
   const shareKakao = () => {
     track("share_click", { channel: "kakao", tier: tier.key });
-    const url = resultUrl();
+    const url = resultUrl("kakao");
     const ogImage = `${window.location.origin}/api/og?tier=${tier.key}`;
     if (!window.Kakao || !window.Kakao.isInitialized()) {
       showToast("카카오 SDK가 아직 로드되지 않았어요");
@@ -160,7 +166,7 @@ export default function Page() {
   const shareLink = async () => {
     track("share_click", { channel: "link", tier: tier.key });
     try {
-      await navigator.clipboard.writeText(resultUrl());
+      await navigator.clipboard.writeText(resultUrl("copy"));
     } catch {}
     showToast("🔗 링크가 복사됐어요!");
   };
