@@ -144,7 +144,7 @@ export async function GET(req: Request) {
 
             <div
               style={{
-                marginTop: "auto",
+                marginTop: 24,
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
