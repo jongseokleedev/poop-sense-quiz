@@ -142,19 +142,24 @@ export default function Page() {
       showToast("카카오 SDK가 아직 로드되지 않았어요");
       return;
     }
+    const summary = tier.description.split(/(?<=[.!?])\s/)[0];
     window.Kakao.Share.sendDefault({
       objectType: "feed",
       content: {
-        title: `${tier.emoji} ${tier.name}`,
-        description: `친구의 똥감지수는 ${idx}% — 나의 유형은?`,
+        title: `${tier.emoji} ${tier.name} · 똥감지수 ${idx}%`,
+        description: `${summary}\n\n내 친구의 똥감 유형은? 👉`,
         imageUrl: ogImage,
+        imageWidth: 1200,
+        imageHeight: 630,
         link: { mobileWebUrl: url, webUrl: url },
       },
+      social: {
+        likeCount: idx,
+        commentCount: 8,
+      },
       buttons: [
-        {
-          title: "나도 테스트하기",
-          link: { mobileWebUrl: url, webUrl: url },
-        },
+        { title: "나도 테스트하기", link: { mobileWebUrl: url, webUrl: url } },
+        { title: "결과 자세히 보기", link: { mobileWebUrl: url, webUrl: url } },
       ],
     });
   };

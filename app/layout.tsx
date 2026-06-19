@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/react";
-import { PosthogProvider } from "./analytics";
+import { GAProvider } from "./analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <PosthogProvider />
+        <GAProvider />
         {children}
         <Analytics />
       </body>

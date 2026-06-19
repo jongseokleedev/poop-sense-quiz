@@ -1,32 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
-import posthog from "posthog-js";
+import Script from "next/script";
 
-let initialized = false;
-
-export function initPosthog() {
-  if (initialized || typeof window === "undefined") return;
-  const key = process.env.NEXT_PUBLIC_POSTHOG_KEY;
-  if (!key) return;
-  posthog.init(key, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://us.i.posthog.com",
-    capture_pageview: true,
-    capture_pageleave: true,
-    person_profiles: "always",
-  });
-  initialized = true;
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
+  }
 }
+
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export function track(event: string, props?: Record<string, unknown>) {
-  if (typeof window === "undefined") return;
-  if (!initialized) return;
-  posthog.capture(event, props);
+  if (typeof window === "undefined" || !window.gtag) return;
+  window.gtag("event", event, props || {});
 }
 
-export function PosthogProvider() {
-  useEffect(() => {
-    initPosthog();
-  }, []);
-  return null;
+export function GAProvider() {
+  if (!GA_ID) return null;
+  return (
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="ga-init" strategy="afterInteractive">{`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', '${GA_ID}', { send_page_view: true });
+      `}</Script>
+    </>
+  );
 }
