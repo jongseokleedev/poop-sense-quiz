@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { TIERS, type Tier, type TierKey } from "./tiers";
+import { track } from "./analytics";
 
 declare global {
   interface Window {
@@ -54,6 +55,12 @@ export default function Page() {
     const day = String(d.getDate()).padStart(2, "0");
     setReportDate(`${y}.${m}.${day}`);
 
+    const params = new URLSearchParams(window.location.search);
+    const r = params.get("r");
+    if (r && (r === "master" || r === "sangtachi" || r === "buhok" || r === "psycho")) {
+      track("result_view_from_share", { referred_tier: r });
+    }
+
     const key = process.env.NEXT_PUBLIC_KAKAO_KEY;
     if (!key || typeof document === "undefined") return;
     if (document.getElementById("kakao-sdk")) return;
@@ -79,15 +86,24 @@ export default function Page() {
     setAnswers(Array(8).fill(null));
     setStep(0);
     setScreen("quiz");
+    track("quiz_start");
   };
 
   const answer = (val: boolean) => {
     const next = [...answers];
     next[step] = val;
     setAnswers(next);
+    track("question_answered", { step: step + 1, answer: val });
     if (step < 7) {
       setStep(step + 1);
     } else {
+      const finalScore = next.filter((a) => a === true).length;
+      const finalTier = pickTier(finalScore);
+      track("quiz_completed", {
+        tier: finalTier.key,
+        score: finalScore,
+        idx: Math.round((finalScore / 8) * 100),
+      });
       setScreen("result");
     }
   };
@@ -101,6 +117,7 @@ export default function Page() {
   };
 
   const restart = () => {
+    track("restart_click", { from_tier: tier.key });
     setAnswers(Array(8).fill(null));
     setStep(0);
     setScreen("intro");
@@ -118,6 +135,7 @@ export default function Page() {
   };
 
   const shareKakao = () => {
+    track("share_click", { channel: "kakao", tier: tier.key });
     const url = resultUrl();
     const ogImage = `${window.location.origin}/api/og?tier=${tier.key}`;
     if (!window.Kakao || !window.Kakao.isInitialized()) {
@@ -141,6 +159,7 @@ export default function Page() {
     });
   };
   const shareLink = async () => {
+    track("share_click", { channel: "link", tier: tier.key });
     try {
       await navigator.clipboard.writeText(resultUrl());
     } catch {}
