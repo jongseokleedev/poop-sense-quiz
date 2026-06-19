@@ -143,7 +143,7 @@ export default function Page() {
   const shareKakao = () => {
     track("share_click", { channel: "kakao", tier: tier.key });
     const url = resultUrl("kakao");
-    const ogImage = `${window.location.origin}/api/og?tier=${tier.key}`;
+    const ogImage = `${window.location.origin}/api/og?tier=${tier.key}&v=2`;
     if (!window.Kakao || !window.Kakao.isInitialized()) {
       showToast("카카오 SDK가 아직 로드되지 않았어요");
       return;

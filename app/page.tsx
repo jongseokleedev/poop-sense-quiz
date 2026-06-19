@@ -18,7 +18,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const description = tier
     ? `친구의 결과: "${tier.name}" — 나의 똥감 유형도 확인해보세요!`
     : "지하철에서, 데이트 중에, 시험장에서. 당신은 급똥의 위기를 얼마나 예민하게 감지하나요?";
-  const ogUrl = tier ? `${SITE}/api/og?tier=${tier.key}` : `${SITE}/api/og`;
+  const ogUrl = tier ? `${SITE}/api/og?tier=${tier.key}&v=2` : `${SITE}/api/og?v=2`;
 
   return {
     title,
