@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  @keyframes rb-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes rb-pop { 0% { opacity: 0; transform: scale(.92); } 100% { opacity: 1; transform: none; } }
+  @keyframes rb-bob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-10px) rotate(3deg); } }
+  @keyframes rb-toast { 0% { opacity: 0; transform: translate(-50%, 12px); } 12%,88% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, 12px); } }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #E7D2AE; display: flex; justify-content: center; align-items: flex-start; font-family: 'Pretendard', -apple-system, sans-serif;">
+  <div style="width: 100%; max-width: 430px; min-height: 100vh; background: #FBF4E6; color: #2A2018; position: relative; overflow: hidden; box-shadow: 0 0 60px rgba(80,50,20,.18);">
+
+    <!-- ===================== INTRO ===================== -->
+    <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+      <div style="min-height: 100vh; display: flex; flex-direction: column; padding: 48px 28px 32px;">
+        <div style="display: flex; justify-content: center;">
+          <div style="display: inline-flex; align-items: center; gap: 6px; background: #FFFFFF; border: 1.5px solid #E7DCC6; padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: #6E4B2A; letter-spacing: -.01em;">🔬 {{ labName }}</div>
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px 0;">
+          <div style="font-size: 96px; line-height: 1; margin-bottom: 8px; animation: rb-bob 2.6s ease-in-out infinite;">💩</div>
+          <div style="font-size: 13px; font-weight: 800; color: #E0452A; letter-spacing: .14em; margin-bottom: 14px;">URGENT POOP TEST</div>
+          <h1 style="font-size: 42px; font-weight: 800; line-height: 1.14; letter-spacing: -.03em; margin: 0 0 18px;">급똥 감(感)능력<br>테스트</h1>
+          <p style="font-size: 15.5px; line-height: 1.65; color: #6A5A47; margin: 0 0 4px; max-width: 320px; word-break: keep-all;">지하철에서, 데이트 중에, 시험장에서.<br>당신은 급똥의 위기를 얼마나 예민하게 감지하나요?</p>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 18px; margin-bottom: 18px; font-size: 13px; font-weight: 600; color: #8A7860;">
+          <span>📋 문항 8개</span>
+          <span style="color: #D8CAB0;">|</span>
+          <span>⏱ 약 30초</span>
+        </div>
+
+        <button onClick="{{ start }}" style="width: 100%; border: none; background: #2A2018; color: #FBF4E6; font-family: inherit; font-size: 18px; font-weight: 800; padding: 18px; border-radius: 16px; cursor: pointer; letter-spacing: -.01em; box-shadow: 0 6px 0 #6E4B2A;" style-active="{{ pressBtn }}">테스트 시작하기</button>
+        <p style="text-align: center; font-size: 12px; color: #A9997F; margin: 16px 0 0;">본 테스트는 의학적 근거가 1도 없습니다 🤫</p>
+      </div>
+    </sc-if>
+
+    <!-- ===================== QUIZ ===================== -->
+    <sc-if value="{{ isQuiz }}" hint-placeholder-val="{{ true }}">
+      <div style="min-height: 100vh; display: flex; flex-direction: column; padding: 20px 24px 28px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+          <button onClick="{{ back }}" aria-label="이전" style="border: none; background: transparent; font-size: 22px; cursor: pointer; color: #6A5A47; padding: 4px 6px; line-height: 1;">←</button>
+          <div style="flex: 1; height: 8px; background: #ECE0C8; border-radius: 999px; overflow: hidden;">
+            <div style="height: 100%; width: {{ progressPct }}%; background: #E0452A; border-radius: 999px; transition: width .35s cubic-bezier(.4,0,.2,1);"></div>
+          </div>
+          <div style="font-size: 13px; font-weight: 700; color: #6A5A47; font-family: 'DM Mono', monospace; min-width: 36px; text-align: right;">{{ qNum }}/8</div>
+        </div>
+
+        <div key="{{ step }}" style="flex: 1; display: flex; flex-direction: column; animation: rb-up .35s ease both;">
+          <div style="margin-top: 24px;">
+            <div style="font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: #E0452A; letter-spacing: .04em; margin-bottom: 18px;">Q.{{ qNum }}</div>
+            <div style="font-size: 13px; font-weight: 700; color: #B07A3A; margin-bottom: 10px;">나는...</div>
+            <h2 style="font-size: 25px; font-weight: 800; line-height: 1.42; letter-spacing: -.02em; margin: 0; word-break: keep-all;">{{ currentQ }}</h2>
+          </div>
+
+          <div style="flex: 1;"></div>
+
+          <div style="display: flex; gap: 12px;">
+            <button onClick="{{ answerYes }}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border: none; background: #2A2018; color: #FBF4E6; font-family: inherit; font-size: 17px; font-weight: 800; padding: 18px; border-radius: 14px; cursor: pointer;" style-active="{{ pressBtn }}">🙋 네, 그래요</button>
+            <button onClick="{{ answerNo }}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; border: 2px solid #DBCDAF; background: #FFFFFF; color: #6A5A47; font-family: inherit; font-size: 17px; font-weight: 800; padding: 18px; border-radius: 14px; cursor: pointer;" style-active="{{ pressBtn }}">🙅 아니요</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- ===================== RESULT ===================== -->
+    <sc-if value="{{ isResult }}" hint-placeholder-val="{{ true }}">
+      <div style="min-height: 100vh; padding: 32px 22px 36px; display: flex; flex-direction: column; gap: 18px; animation: rb-pop .4s ease both;">
+
+        <div style="text-align: center;">
+          <div style="font-size: 12.5px; font-weight: 700; color: #6E4B2A; margin-bottom: 4px;">🔬 {{ labName }}</div>
+          <div style="font-size: 21px; font-weight: 800; letter-spacing: -.02em;">검사 결과가 나왔어요</div>
+        </div>
+
+        <!-- ---- REPORT ---- -->
+        <div style="background: #FFFFFF; border: 1.5px solid #E7DCC6; border-radius: 18px; padding: 22px; box-shadow: 0 6px 20px rgba(80,50,20,.07);">
+            <div style="display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 11.5px; color: #A9997F; border-bottom: 1px dashed #E0D4BC; padding-bottom: 12px; margin-bottom: 16px;">
+              <span>REPORT No.{{ reportId }}</span>
+              <span>{{ reportDate }}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px;">
+              <div style="font-size: 46px; line-height: 1;">{{ result.emoji }}</div>
+              <div>
+                <div style="font-size: 12px; font-weight: 700; color: #A9997F; margin-bottom: 2px;">최종 판정</div>
+                <div style="font-size: 24px; font-weight: 800; letter-spacing: -.02em; color: {{ result.accent }};">{{ result.name }}</div>
+              </div>
+            </div>
+
+            <div style="background: {{ result.soft }}; border-radius: 12px; padding: 16px; margin-bottom: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+                <span style="font-size: 13px; font-weight: 700; color: #6A5A47;">똥감지수</span>
+                <span style="font-family: 'DM Mono', monospace; font-size: 30px; font-weight: 500; color: {{ result.accent }}; line-height: 1;">{{ idx }}<span style="font-size: 16px;">%</span></span>
+              </div>
+              <div style="position: relative; height: 12px; border-radius: 999px; background: linear-gradient(90deg, #C9BBA0 0%, #E8A11C 50%, #E0452A 100%); margin-bottom: 8px;">
+                <div style="position: absolute; top: -4px; left: {{ markerLeft }}; transform: translateX(-50%); width: 20px; height: 20px; border-radius: 50%; background: #2A2018; border: 3px solid #FFFFFF; box-shadow: 0 1px 4px rgba(0,0,0,.3);"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 10.5px; font-weight: 600; color: #A9997F;">
+                <span>싸이코패스</span><span>부족</span><span>상타치</span><span>마스터</span>
+              </div>
+            </div>
+
+            <sc-for list="{{ result.rows }}" as="row" hint-placeholder-count="4">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid #F0E8D8;">
+                <span style="font-size: 13.5px; color: #6A5A47;">{{ row.label }}</span>
+                <span style="font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: #2A2018;">{{ row.value }}</span>
+              </div>
+            </sc-for>
+
+            <div style="display: flex; justify-content: flex-end; margin-top: 16px;">
+              <div style="border: 2.5px solid {{ result.accent }}; color: {{ result.accent }}; font-weight: 800; font-size: 13px; padding: 6px 14px; border-radius: 8px; transform: rotate(-7deg); letter-spacing: .02em; opacity: .9;">{{ result.name }} 판정</div>
+            </div>
+        </div>
+
+        <!-- description (common) -->
+        <div style="background: #FFFFFF; border: 1.5px solid #E7DCC6; border-radius: 16px; padding: 20px;">
+          <div style="display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 800; color: {{ result.accent }}; margin-bottom: 10px;">📖 진단 소견</div>
+          <p style="font-size: 14.5px; line-height: 1.72; color: #4A3E30; margin: 0; word-break: keep-all;">{{ result.desc }}</p>
+        </div>
+
+        <!-- friend hook -->
+        <div style="background: #2A2018; border-radius: 16px; padding: 20px; text-align: center; color: #FBF4E6;">
+          <div style="font-size: 28px; margin-bottom: 6px;">🤔</div>
+          <div style="font-size: 16px; font-weight: 800; line-height: 1.4; margin-bottom: 4px; word-break: keep-all;">내 친구는 싸이코패스일까,<br>급똥 마스터일까?</div>
+          <div style="font-size: 13px; color: #C7B79E; line-height: 1.5;">테스트를 공유하고 친구의 똥감 유형도 확인해보세요 👇</div>
+        </div>
+
+        <!-- share -->
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; gap: 10px;">
+            <button onClick="{{ shareKakao }}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; border: none; background: #FEE500; color: #3A1D1D; font-family: inherit; font-size: 14.5px; font-weight: 800; padding: 15px; border-radius: 13px; cursor: pointer;" style-active="{{ pressBtn }}">💬 카카오톡</button>
+            <button onClick="{{ shareInsta }}" style="flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; border: none; background: linear-gradient(105deg, #F9CE34, #EE2A7B 48%, #6228D7); color: #FFFFFF; font-family: inherit; font-size: 14.5px; font-weight: 800; padding: 15px; border-radius: 13px; cursor: pointer;" style-active="{{ pressBtn }}">📸 인스타 스토리</button>
+          </div>
+          <button onClick="{{ shareLink }}" style="display: flex; align-items: center; justify-content: center; gap: 7px; border: 2px solid #DBCDAF; background: #FFFFFF; color: #6A5A47; font-family: inherit; font-size: 14.5px; font-weight: 800; padding: 14px; border-radius: 13px; cursor: pointer;" style-active="{{ pressBtn }}">🔗 링크 복사하기</button>
+        </div>
+
+        <button onClick="{{ restart }}" style="border: none; background: transparent; color: #A9997F; font-family: inherit; font-size: 14px; font-weight: 700; padding: 8px; cursor: pointer; margin-top: 2px;">🔄 다시 테스트하기</button>
+        <p style="text-align: center; font-size: 11.5px; color: #BBAB91; margin: 0;">{{ labName }} · 공유는 사랑입니다 💛</p>
+      </div>
+    </sc-if>
+
+    <!-- toast -->
+    <sc-if value="{{ toast }}" hint-placeholder-val="">
+      <div style="position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%); background: #2A2018; color: #FBF4E6; font-size: 13.5px; font-weight: 700; padding: 13px 22px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0,0,0,.25); z-index: 50; animation: rb-toast 2.2s ease both; white-space: nowrap;">{{ toast }}</div>
+    </sc-if>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 920}, &quot;labName&quot;: {&quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;대한급똥감수성연구소&quot;, &quot;tsType&quot;: &quot;string&quot;}}">
+class Component extends DCLogic {
+  state = (() => {
+    const d = new Date();
+    const p = (n) => String(n).padStart(2, '0');
+    return {
+      screen: 'intro',
+      step: 0,
+      answers: [null, null, null, null, null, null, null, null],
+      toast: '',
+      reportId: String(Math.floor(1000 + Math.random() * 9000)),
+      reportDate: `${d.getFullYear()}.${p(d.getMonth() + 1)}.${p(d.getDate())}`,
+    };
+  })();
+
+  QUESTIONS = [
+    '지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.',
+    '위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.',
+    '고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.',
+    '중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.',
+    "신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.",
+    '데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.',
+    '언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.',
+    '시험을 보다가 감독관과 함께 화장실에 간 적이 있다.',
+  ];
+
+  TIERS = {
+    master: {
+      name: '급똥 마스터', emoji: '🚨', accent: '#E0452A', soft: '#FCE9E3', top: '상위 5%',
+      desc: '함께 있는 누군가가 똥 마렵다고 하면, 내가 마려운 게 아닌데도 심장이 빠르게 뛰고 식은땀이 흐를 확률이 높습니다. 똥 마려운 사람이 얼마나 괴롭고 외로운지 누구보다 잘 이해하고 있습니다.',
+      rows: [{ label: '위급반응속도', value: '0.3초' }, { label: '화장실 탐색력', value: 'S 등급' }, { label: '타인 공감 수용성', value: '98%' }, { label: '휴지 상시 보유율', value: '100%' }],
+    },
+    sangtachi: {
+      name: '똥감능력 상타치', emoji: '🧭', accent: '#E8A11C', soft: '#FBF0D7', top: '상위 33%',
+      desc: '누군가가 똥이 마려울 때 빠르게 화장실 위치를 스캔해줍니다. 상대방을 진심으로 걱정하고 응원하지만, 지금 나에게 닥친 위기는 아니기 때문에 마음은 평온합니다.',
+      rows: [{ label: '위급반응속도', value: '1.2초' }, { label: '화장실 탐색력', value: 'A 등급' }, { label: '타인 공감 수용성', value: '74%' }, { label: '휴지 상시 보유율', value: '52%' }],
+    },
+    buhok: {
+      name: '똥감능력 부족', emoji: '🌫️', accent: '#8A5A33', soft: '#F0E6D8', top: '상위 71%',
+      desc: '위급했던 순간이 분명 있었던 것 같은데 기억에서 많이 사라진 단계입니다. 또다시 급똥이 찾아올 수 있다는 생각이 들지 않고, 마치 남의 일처럼 느껴집니다.',
+      rows: [{ label: '위급반응속도', value: '4.8초' }, { label: '화장실 탐색력', value: 'C 등급' }, { label: '타인 공감 수용성', value: '41%' }, { label: '휴지 상시 보유율', value: '12%' }],
+    },
+    psycho: {
+      name: '싸이코패스', emoji: '🧊', accent: '#5B4B8A', soft: '#EAE6F5', top: '0.6% (극희귀)',
+      desc: "최고로 건강한 장을 보유한 당신은 급똥을 경험해본 적조차 없는 기만자입니다. 상황의 위급성을 전혀 인지하지 못하며, 상대방에게 '아 그냥 좀만 참아'라는 폭언까지 휘두를 수 있습니다. 똥감수성을 키우기 위해 많은 노력과 공부가 필요합니다.",
+      rows: [{ label: '위급반응속도', value: '측정불가' }, { label: '화장실 탐색력', value: 'F 등급' }, { label: '타인 공감 수용성', value: '3%' }, { label: '휴지 상시 보유율', value: '0%' }],
+    },
+  };
+
+  start = () => this.setState({ screen: 'quiz', step: 0, answers: [null, null, null, null, null, null, null, null] });
+
+  record = (val) => {
+    const answers = this.state.answers.slice();
+    answers[this.state.step] = val;
+    if (this.state.step >= 7) this.setState({ answers, screen: 'result' });
+    else this.setState({ answers, step: this.state.step + 1 });
+  };
+  answerYes = () => this.record(true);
+  answerNo = () => this.record(false);
+
+  back = () => {
+    if (this.state.step === 0) this.setState({ screen: 'intro' });
+    else this.setState({ step: this.state.step - 1 });
+  };
+
+  restart = () => this.setState({ screen: 'intro', step: 0, answers: [null, null, null, null, null, null, null, null] });
+
+  showToast = (msg) => {
+    this.setState({ toast: msg });
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ toast: '' }), 2100);
+  };
+  shareKakao = () => this.showToast('카카오톡 공유창을 여는 중... (데모)');
+  shareInsta = () => this.showToast('인스타 스토리로 공유합니다 (데모)');
+  shareLink = () => {
+    try { navigator.clipboard && navigator.clipboard.writeText(location.href); } catch (e) {}
+    this.showToast('🔗 링크가 복사됐어요!');
+  };
+
+  renderVals() {
+    const { screen, step, answers } = this.state;
+    const score = answers.filter((a) => a === true).length;
+    const idx = Math.round((score / 8) * 100);
+    let key;
+    if (score >= 7) key = 'master';
+    else if (score >= 4) key = 'sangtachi';
+    else if (score >= 1) key = 'buhok';
+    else key = 'psycho';
+    const result = this.TIERS[key];
+
+    return {
+      labName: this.props.labName || '대한급똥감수성연구소',
+      isIntro: screen === 'intro',
+      isQuiz: screen === 'quiz',
+      isResult: screen === 'result',
+      step,
+      qNum: step + 1,
+      progressPct: ((step + 1) / 8) * 100,
+      currentQ: this.QUESTIONS[step],
+      idx,
+      result,
+      markerLeft: idx + '%',
+      reportId: this.state.reportId,
+      reportDate: this.state.reportDate,
+      toast: this.state.toast,
+      pressBtn: { transform: 'scale(.97)', filter: 'brightness(.96)' },
+      start: this.start,
+      answerYes: this.answerYes,
+      answerNo: this.answerNo,
+      back: this.back,
+      restart: this.restart,
+      shareKakao: this.shareKakao,
+      shareInsta: this.shareInsta,
+      shareLink: this.shareLink,
+    };
+  }
+}
+</script>
+</body>
+</html>
