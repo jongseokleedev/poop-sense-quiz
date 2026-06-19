@@ -210,20 +210,22 @@ export default function Page() {
             </div>
             <div className="counter mono">{step + 1}/8</div>
           </div>
-          <div className="card-body" key={step}>
-            <div className="q-num mono">Q.{step + 1}</div>
-            <div className="lead-in">나는...</div>
-            <h2 className="statement">{QUESTIONS[step]}</h2>
-            <div className="answers">
-              <button className="answer yes" onClick={() => answer(true)}>
-                <span>🙋</span>
-                <span>네, 그래요</span>
-              </button>
-              <button className="answer no" onClick={() => answer(false)}>
-                <span>🙅</span>
-                <span>아니요</span>
-              </button>
+          <div className="card-body">
+            <div className="question-block" key={step}>
+              <div className="q-num mono">Q.{step + 1}</div>
+              <div className="lead-in">나는...</div>
+              <h2 className="statement">{QUESTIONS[step]}</h2>
             </div>
+          </div>
+          <div className="answers">
+            <button className="answer yes" onClick={() => answer(true)}>
+              <span>🙋</span>
+              <span>네, 그래요</span>
+            </button>
+            <button className="answer no" onClick={() => answer(false)}>
+              <span>🙅</span>
+              <span>아니요</span>
+            </button>
           </div>
         </div>
       )}
