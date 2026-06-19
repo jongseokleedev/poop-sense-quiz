@@ -128,8 +128,8 @@ export async function GET(req: Request) {
           <div
             style={{
               display: "flex",
-              alignItems: "baseline",
-              gap: 18,
+              alignItems: "center",
+              gap: 28,
               marginTop: 36,
             }}
           >
@@ -146,24 +146,21 @@ export async function GET(req: Request) {
               {idx}
               <span style={{ fontSize: 56 }}>%</span>
             </div>
-          </div>
-
-          <div
-            style={{
-              position: "absolute",
-              bottom: 70,
-              right: 80,
-              display: "flex",
-              border: `5px solid ${tier.accent}`,
-              color: tier.accent,
-              fontSize: 36,
-              padding: "12px 28px",
-              borderRadius: 14,
-              transform: "rotate(-7deg)",
-              background: "#FBF4E6",
-            }}
-          >
-            {tier.top}
+            <div
+              style={{
+                display: "flex",
+                border: `5px solid ${tier.accent}`,
+                color: tier.accent,
+                fontSize: 34,
+                padding: "10px 22px",
+                borderRadius: 14,
+                transform: "rotate(-7deg)",
+                background: "#FBF4E6",
+                marginLeft: 8,
+              }}
+            >
+              {tier.top}
+            </div>
           </div>
         </div>
       ),
