@@ -3,6 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { TIERS, type Tier, type TierKey } from "./tiers";
 
+declare global {
+  interface Window {
+    Kakao?: {
+      isInitialized: () => boolean;
+      init: (key: string) => void;
+      Share: {
+        sendDefault: (opts: object) => void;
+      };
+    };
+  }
+}
+
+const KAKAO_SDK_URL = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js";
+
 const QUESTIONS = [
   "지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.",
   "위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.",
@@ -39,6 +53,20 @@ export default function Page() {
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
     setReportDate(`${y}.${m}.${day}`);
+
+    const key = process.env.NEXT_PUBLIC_KAKAO_KEY;
+    if (!key || typeof document === "undefined") return;
+    if (document.getElementById("kakao-sdk")) return;
+    const s = document.createElement("script");
+    s.id = "kakao-sdk";
+    s.src = KAKAO_SDK_URL;
+    s.async = true;
+    s.onload = () => {
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(key);
+      }
+    };
+    document.head.appendChild(s);
   }, []);
 
   const showToast = (msg: string) => {
@@ -89,7 +117,29 @@ export default function Page() {
     return u.toString();
   };
 
-  const shareKakao = () => showToast("카카오톡 공유창을 여는 중... (데모)");
+  const shareKakao = () => {
+    const url = resultUrl();
+    const ogImage = `${window.location.origin}/api/og?tier=${tier.key}`;
+    if (!window.Kakao || !window.Kakao.isInitialized()) {
+      showToast("카카오 SDK가 아직 로드되지 않았어요");
+      return;
+    }
+    window.Kakao.Share.sendDefault({
+      objectType: "feed",
+      content: {
+        title: `${tier.emoji} ${tier.name}`,
+        description: `친구의 똥감지수는 ${idx}% — 나의 유형은?`,
+        imageUrl: ogImage,
+        link: { mobileWebUrl: url, webUrl: url },
+      },
+      buttons: [
+        {
+          title: "나도 테스트하기",
+          link: { mobileWebUrl: url, webUrl: url },
+        },
+      ],
+    });
+  };
   const shareLink = async () => {
     try {
       await navigator.clipboard.writeText(resultUrl());
