@@ -18,15 +18,15 @@ declare global {
 
 const KAKAO_SDK_URL = "https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js";
 
-const QUESTIONS = [
-  "지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.",
-  "위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.",
-  "고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.",
-  "중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.",
-  "신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.",
-  "데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.",
-  "언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.",
-  "시험을 보다가 감독관과 함께 화장실에 간 적이 있다.",
+const QUESTIONS: { text: string; emoji: string; badge: string; tile: string }[] = [
+  { text: "지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.", emoji: "🚇", badge: "🚽", tile: "#FBF0D7" },
+  { text: "위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.", emoji: "🏃‍♀️", badge: "💨", tile: "#FCE9E3" },
+  { text: "고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.", emoji: "🚌", badge: "🙏", tile: "#E4EEF6" },
+  { text: "중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.", emoji: "🌶️", badge: "🚫", tile: "#FBE3DD" },
+  { text: "신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.", emoji: "🙏", badge: "🥺", tile: "#EAE6F5" },
+  { text: "데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.", emoji: "💕", badge: "😣", tile: "#FCE3EF" },
+  { text: "언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.", emoji: "🧻", badge: "👜", tile: "#F0E6D8" },
+  { text: "시험을 보다가 감독관과 함께 화장실에 간 적이 있다.", emoji: "📝", badge: "🚽", tile: "#E4F0E6" },
 ];
 
 function pickTier(score: number): Tier {
@@ -219,8 +219,12 @@ export default function Page() {
           <div className="card-body">
             <div className="question-block" key={step}>
               <div className="q-num mono">Q.{step + 1}</div>
+              <div className="illust-tile" style={{ background: QUESTIONS[step].tile }}>
+                <span className="illust-emoji">{QUESTIONS[step].emoji}</span>
+                <span className="illust-badge">{QUESTIONS[step].badge}</span>
+              </div>
               <div className="lead-in">나는...</div>
-              <h2 className="statement">{QUESTIONS[step]}</h2>
+              <h2 className="statement">{QUESTIONS[step].text}</h2>
             </div>
           </div>
           <div className="answers">

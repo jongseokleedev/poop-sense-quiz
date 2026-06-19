@@ -48,6 +48,7 @@ The task is to **recreate this design in the target codebase's existing environm
     - **Counter:** `{n}/8`, DM Mono `13px / 700`, color `#6A5A47`, min-width `36px`, right-aligned.
   - **Card body** (re-mounts per question via React `key={step}`, animates in with `rb-up`: opacity 0→1, translateY 16px→0, `.35s ease`):
     - **Q number:** `Q.{n}`, DM Mono `14px / 500`, color `#E0452A`, letter-spacing `.04em`.
+    - **Illustration tile** (centered, margin `6px 0 24px`): a `108×108px` rounded-square (`radius 22px`), background = per-question soft tint, `box-shadow: 0 4px 14px rgba(80,50,20,.08)`. Centered **primary emoji** at `54px`. A **secondary "reaction" badge** overlaps bottom-right: `44px` white circle, `radius 50%`, `box-shadow: 0 2px 8px rgba(80,50,20,.16)`, containing a `23px` emoji. (Emoji-as-illustration; see the per-question table below. In a codebase these can stay as emoji or be swapped for custom SVG/illustration assets — keep the tile + reaction-badge composition.)
     - **Lead-in:** `나는...`, `13px / 700`, color `#B07A3A`.
     - **Statement** `<h2>`: `25px / 800`, line-height `1.42`, letter-spacing `-.02em`, color `#2A2018`, `word-break: keep-all`.
     - **Answer buttons** (flex **row**, gap `12px`, each flex:1):
@@ -55,15 +56,18 @@ The task is to **recreate this design in the target codebase's existing environm
       - **아니요** (RIGHT): bg `#FFFFFF`, `2px solid #DBCDAF`, text `#6A5A47`. Records `false`.
       - Both: `17px / 800`, padding `18px`, radius `14px`, centered with `🙋` / `🙅` emoji (gap `8px`). Active: `scale(.97)` + `brightness(.96)`.
 
-**The 8 statements** (exact copy, asked in order):
-1. `지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.`
-2. `위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.`
-3. `고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.`
-4. `중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.`
-5. `신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.`
-6. `데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.`
-7. `언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.`
-8. `시험을 보다가 감독관과 함께 화장실에 간 적이 있다.`
+**The 8 statements** (exact copy, asked in order — with each card's illustration emoji + reaction badge + tile tint):
+
+| # | statement | emoji | badge | tile bg |
+|---|---|---|---|---|
+| 1 | `지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.` | 🚇 | 🚽 | `#FBF0D7` |
+| 2 | `위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.` | 🏃‍♀️ | 💨 | `#FCE9E3` |
+| 3 | `고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.` | 🚌 | 🙏 | `#E4EEF6` |
+| 4 | `중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.` | 🌶️ | 🚫 | `#FBE3DD` |
+| 5 | `신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.` | 🙏 | 🥺 | `#EAE6F5` |
+| 6 | `데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.` | 💕 | 😣 | `#FCE3EF` |
+| 7 | `언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.` | 🧻 | 👜 | `#F0E6D8` |
+| 8 | `시험을 보다가 감독관과 함께 화장실에 간 적이 있다.` | 📝 | 🚽 | `#E4F0E6` |
 
 ### 3. Result (lab report)
 - **Purpose:** Show the user's type + index, then prompt sharing.
@@ -161,9 +165,11 @@ The task is to **recreate this design in the target codebase's existing environm
 **Spacing:** screen padding 22–28px horizontal; section gaps 12–18px; card padding 16–22px.
 
 ## Assets
-- **No image assets.** All graphics are emoji (`💩 🔬 📋 ⏱ 🙋 🙅 🚨 🧭 🌫️ 🧊 📖 🤔 👇 💬 📸 🔗 🔄 💛 🤫`).
+- **In-page graphics are all emoji** (`💩 🔬 📋 ⏱ 🙋 🙅 🚨 🧭 🌫️ 🧊 📖 🤔 👇 💬 📸 🔗 🔄 💛 🤫` + the per-question quiz emoji in the table above). No raster/SVG assets are referenced by the page itself.
+- **Kakao app icon** (for Kakao Developers app registration): provided as PNG in `assets/` — `kakao_app_icon_white_128.png` (Kakao's recommended 128px), plus `_512` and `_1024` for other uses. It's a worried/sweating poop mascot (warm-brown gradient body, red urgency ticks, blue sweat drop) on a **white** background. Kakao rounds the icon automatically on display.
 - **Fonts** load from CDNs: Pretendard (`cdn.jsdelivr.net/gh/orioncactus/pretendard`), DM Mono (Google Fonts). In production, prefer self-hosting / your app's font pipeline.
 - If you add real share previews, you'll need an OG image per result type (server-rendered or static).
 
 ## Files
 - `급똥감능력테스트.dc.html` — the full design reference (intro + quiz + result, all logic and copy). Open in a browser to interact with the live prototype.
+- `assets/kakao_app_icon_white_{128,512,1024}.png` — Kakao app-registration icon (white background).

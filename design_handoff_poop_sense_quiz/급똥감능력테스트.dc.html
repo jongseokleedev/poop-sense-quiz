@@ -60,10 +60,16 @@
         </div>
 
         <div key="{{ step }}" style="flex: 1; display: flex; flex-direction: column; animation: rb-up .35s ease both;">
-          <div style="margin-top: 24px;">
+          <div style="margin-top: 18px;">
             <div style="font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; color: #E0452A; letter-spacing: .04em; margin-bottom: 18px;">Q.{{ qNum }}</div>
+            <div style="display: flex; justify-content: center; margin: 6px 0 24px;">
+              <div style="position: relative; width: 108px; height: 108px; border-radius: 22px; background: {{ current.bg }}; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(80,50,20,.08);">
+                <span style="font-size: 54px; line-height: 1;">{{ current.e }}</span>
+                <span style="position: absolute; right: -7px; bottom: -7px; width: 44px; height: 44px; border-radius: 50%; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 23px; box-shadow: 0 2px 8px rgba(80,50,20,.16);">{{ current.sub }}</span>
+              </div>
+            </div>
             <div style="font-size: 13px; font-weight: 700; color: #B07A3A; margin-bottom: 10px;">나는...</div>
-            <h2 style="font-size: 25px; font-weight: 800; line-height: 1.42; letter-spacing: -.02em; margin: 0; word-break: keep-all;">{{ currentQ }}</h2>
+            <h2 style="font-size: 25px; font-weight: 800; line-height: 1.42; letter-spacing: -.02em; margin: 0; word-break: keep-all;">{{ current.t }}</h2>
           </div>
 
           <div style="flex: 1;"></div>
@@ -175,14 +181,14 @@ class Component extends DCLogic {
   })();
 
   QUESTIONS = [
-    '지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.',
-    '위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.',
-    '고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.',
-    '중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.',
-    "신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.",
-    '데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.',
-    '언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.',
-    '시험을 보다가 감독관과 함께 화장실에 간 적이 있다.',
+    { t: '지하철을 탈 때, 개찰구 안쪽에 화장실이 있는 역이 어딘지 체크한 적이 있다.', e: '🚇', sub: '🚽', bg: '#FBF0D7' },
+    { t: '위급 상황에서 사람들 눈치 보지 않고 화장실로 전속력으로 달려간 적이 있다.', e: '🏃‍♀️', sub: '💨', bg: '#FCE9E3' },
+    { t: '고속버스에서 기사님께 차를 세워달라고 간청한 적이 있다.', e: '🚌', sub: '🙏', bg: '#E4EEF6' },
+    { t: '중요한 약속이 있는 전날엔 자극적인 음식을 먹지 않는다.', e: '🌶️', sub: '🚫', bg: '#FBE3DD' },
+    { t: "신께 '이번만 넘어가주시면 앞으로 진짜 적당히 먹고 착하게 살게요' 빌어본 적이 있다.", e: '🙏', sub: '🥺', bg: '#EAE6F5' },
+    { t: '데이트에서 똥 마려운 티를 내지 않으려고 기를 쓰며 노력한 적이 있다.', e: '💕', sub: '😣', bg: '#FCE3EF' },
+    { t: '언제 어디서든 위급상황이 올 수 있어서 항상 휴지를 챙겨다닌다.', e: '🧻', sub: '👜', bg: '#F0E6D8' },
+    { t: '시험을 보다가 감독관과 함께 화장실에 간 적이 있다.', e: '📝', sub: '🚽', bg: '#E4F0E6' },
   ];
 
   TIERS = {
@@ -257,7 +263,7 @@ class Component extends DCLogic {
       step,
       qNum: step + 1,
       progressPct: ((step + 1) / 8) * 100,
-      currentQ: this.QUESTIONS[step],
+      current: this.QUESTIONS[step] || {},
       idx,
       result,
       markerLeft: idx + '%',
